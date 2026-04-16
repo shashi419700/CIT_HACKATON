@@ -3,6 +3,11 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import HomeScreen from "../app/home";
+import EmergencyScreen from "../app/EmergencyScreen";
+import MapScreen from "../app/MapScreen";
+import ProfileScreen from "../app/profile";
+
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator() {
@@ -80,6 +85,10 @@ export default function TabNavigator() {
         },
       })}
     >
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Emergency" component={EmergencyScreen} />
+      <Tab.Screen name="Map" component={MapScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 }
