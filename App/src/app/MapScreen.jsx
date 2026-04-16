@@ -7,11 +7,15 @@ import {
   TouchableOpacity,
   Alert,
   Linking,
+  Platform,
 } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
+
+// Responsive scale
+const scale = (size) => (width / 375) * size;
 
 const MapScreen = ({ route }) => {
   const mapRef = useRef(null);
@@ -30,70 +34,26 @@ const MapScreen = ({ route }) => {
   });
 
   const hospitals = [
-    {
-      id: 1,
-      name: "City Hospital",
-      latitude: 25.596,
-      longitude: 85.142,
-    },
+    { id: 1, name: "City Hospital", latitude: 25.596, longitude: 85.142 },
     {
       id: 2,
       name: "Emergency Care Center",
       latitude: 25.592,
       longitude: 85.135,
     },
-    {
-      id: 3,
-      name: "LifeLine Hospital",
-      latitude: 25.599,
-      longitude: 85.13,
-    },
+    { id: 3, name: "LifeLine Hospital", latitude: 25.599, longitude: 85.13 },
   ];
 
-  // locate user
-  const locateUser = () => {
+  const animateTo = (lat, lng, delta = 0.01) => {
     mapRef.current.animateToRegion({
-      latitude: userLocation.latitude,
-      longitude: userLocation.longitude,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
+      latitude: lat,
+      longitude: lng,
+      latitudeDelta: delta,
+      longitudeDelta: delta,
     });
   };
 
-  // show ambulance
-  const showAmbulance = () => {
-    mapRef.current.animateToRegion({
-      latitude: ambulance.latitude,
-      longitude: ambulance.longitude,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
-    });
-  };
-
-  // show hospitals
-  const showHospitals = () => {
-    mapRef.current.animateToRegion({
-      latitude: hospitals[0].latitude,
-      longitude: hospitals[0].longitude,
-      latitudeDelta: 0.02,
-      longitudeDelta: 0.02,
-    });
-  };
-
-  // call
-  const callDriver = () => {
-    Linking.openURL(`tel:${phone}`);
-  };
-
-  // track
-  const trackRoute = () => {
-    Alert.alert("Tracking", "Ambulance route tracking started 🚑");
-  };
-
-  // sos
-  const sosPress = () => {
-    Alert.alert("SOS", "Emergency Alert Sent 🚨");
-  };
+  const callDriver = () => Linking.openURL(`tel:${phone}`);
 
   return (
     <View style={styles.container}>
@@ -108,95 +68,89 @@ const MapScreen = ({ route }) => {
           longitudeDelta: 0.01,
         }}
       >
-        {/* User */}
-        <Marker
-          coordinate={userLocation}
-          title="You"
-          description="Your Location"
-        >
-          <Ionicons name="person-circle" size={40} color="#007bff" />
+        {/* USER */}
+        <Marker coordinate={userLocation}>
+          <Ionicons name="person-circle" size={40} color="#2563EB" />
         </Marker>
 
-        {/* Ambulance */}
-        <Marker
-          coordinate={ambulance}
-          title={ambulanceName}
-          description="Ambulance is on the way"
-          onPress={() => Alert.alert(ambulanceName, "Ambulance Selected")}
-        >
-          <MaterialIcons name="local-shipping" size={35} color="#ff3b3b" />
+        {/* AMBULANCE */}
+        <Marker coordinate={ambulance}>
+          <MaterialIcons name="local-shipping" size={35} color="#EF4444" />
         </Marker>
 
-        {/* Hospitals */}
-        {hospitals.map((hospital) => (
-          <Marker
-            key={hospital.id}
-            coordinate={{
-              latitude: hospital.latitude,
-              longitude: hospital.longitude,
-            }}
-            title={hospital.name}
-            onPress={() => Alert.alert("Hospital", hospital.name)}
-          >
-            <Ionicons name="medkit" size={30} color="green" />
+        {/* HOSPITALS */}
+        {hospitals.map((h) => (
+          <Marker key={h.id} coordinate={h}>
+            <Ionicons name="medkit" size={28} color="#22C55E" />
           </Marker>
         ))}
 
-        {/* Route */}
+        {/* ROUTE */}
         <Polyline
           coordinates={[userLocation, ambulance]}
-          strokeColor="#ff3b3b"
+          strokeColor="#EF4444"
           strokeWidth={4}
         />
       </MapView>
 
       {/* HEADER */}
       <View style={styles.header}>
-        <Ionicons name="location" size={20} color="#fff" />
-        <Text style={styles.headerText}> Live Emergency Tracking</Text>
+        <Ionicons name="location" size={18} color="#fff" />
+        <Text style={styles.headerText}> Live Tracking</Text>
       </View>
 
-      {/* MAP CONTROLS */}
-      <View style={styles.mapControls}>
-        <TouchableOpacity style={styles.controlBtn} onPress={locateUser}>
-          <Ionicons name="locate" size={22} color="#ff3b3b" />
+      {/* CONTROLS */}
+      <View style={styles.controls}>
+        <TouchableOpacity
+          style={styles.controlBtn}
+          onPress={() =>
+            animateTo(userLocation.latitude, userLocation.longitude)
+          }
+        >
+          <Ionicons name="locate" size={20} color="#EF4444" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.controlBtn} onPress={showHospitals}>
-          <Ionicons name="medkit" size={22} color="#ff3b3b" />
+        <TouchableOpacity
+          style={styles.controlBtn}
+          onPress={() =>
+            animateTo(hospitals[0].latitude, hospitals[0].longitude, 0.02)
+          }
+        >
+          <Ionicons name="medkit" size={20} color="#EF4444" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.controlBtn} onPress={showAmbulance}>
-          <Ionicons name="car" size={22} color="#ff3b3b" />
+        <TouchableOpacity
+          style={styles.controlBtn}
+          onPress={() => animateTo(ambulance.latitude, ambulance.longitude)}
+        >
+          <Ionicons name="car" size={20} color="#EF4444" />
         </TouchableOpacity>
       </View>
-
-      {/* SOS */}
-      <TouchableOpacity style={styles.sosButton} onPress={sosPress}>
-        <Text style={styles.sosText}>SOS</Text>
-      </TouchableOpacity>
 
       {/* BOTTOM CARD */}
       <View style={styles.bottomCard}>
         <View style={styles.row}>
-          <Ionicons name="car" size={22} color="#ff3b3b" />
+          <Ionicons name="car" size={20} color="#EF4444" />
           <Text style={styles.title}> Ambulance Arriving</Text>
         </View>
 
         <Text style={styles.info}>Driver: Rajesh Kumar</Text>
-        <Text style={styles.info}>ETA: 5 minutes</Text>
+        <Text style={styles.info}>ETA: 5 mins</Text>
         <Text style={styles.info}>Hospital: City Hospital</Text>
         <Text style={styles.info}>Phone: {phone}</Text>
 
         <View style={styles.buttonRow}>
-          <TouchableOpacity style={styles.callButton} onPress={callDriver}>
-            <Ionicons name="call" size={18} color="#fff" />
-            <Text style={styles.callText}>Call</Text>
+          <TouchableOpacity style={styles.callBtn} onPress={callDriver}>
+            <Ionicons name="call" size={16} color="#fff" />
+            <Text style={styles.btnText}>Call</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.trackButton} onPress={trackRoute}>
-            <Ionicons name="navigate" size={18} color="#fff" />
-            <Text style={styles.callText}>Track</Text>
+          <TouchableOpacity
+            style={styles.trackBtn}
+            onPress={() => Alert.alert("Tracking Started 🚑")}
+          >
+            <Ionicons name="navigate" size={16} color="#fff" />
+            <Text style={styles.btnText}>Track</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -207,38 +161,32 @@ const MapScreen = ({ route }) => {
 export default MapScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  container: { flex: 1 },
 
-  map: {
-    width: width,
-    height: height,
-  },
+  map: { width: "100%", height: "100%" },
 
   header: {
     position: "absolute",
-    top: 50,
-    left: 20,
-    right: 20,
+    top: Platform.OS === "android" ? 40 : 60,
+    alignSelf: "center",
     flexDirection: "row",
-    justifyContent: "center",
-    backgroundColor: "#ff3b3b",
-    padding: 14,
-    borderRadius: 15,
-    elevation: 10,
+    backgroundColor: "#EF4444",
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 20,
+    elevation: 8,
   },
 
   headerText: {
     color: "#fff",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: scale(14),
   },
 
-  mapControls: {
+  controls: {
     position: "absolute",
     right: 15,
-    top: 120,
+    top: height * 0.18,
   },
 
   controlBtn: {
@@ -246,84 +194,89 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 12,
     marginBottom: 10,
-    elevation: 5,
+    elevation: 6,
   },
 
   sosButton: {
     position: "absolute",
-    bottom: 180,
     right: 20,
-    backgroundColor: "#ff3b3b",
-    width: 70,
-    height: 70,
-    borderRadius: 35,
+    bottom: height * 0.28,
+    width: 65,
+    height: 65,
+    borderRadius: 40,
+    backgroundColor: "#EF4444",
     justifyContent: "center",
     alignItems: "center",
-    elevation: 10,
+
+    shadowColor: "#EF4444",
+    shadowOpacity: 0.9,
+    shadowRadius: 20,
+    elevation: 12,
   },
 
   sosText: {
     color: "#fff",
-    fontSize: 18,
     fontWeight: "bold",
+    fontSize: scale(16),
   },
 
   bottomCard: {
     position: "absolute",
-    bottom: 20,
+    bottom: 15,
     left: 15,
     right: 15,
     backgroundColor: "#fff",
-    padding: 20,
     borderRadius: 20,
+    padding: 18,
     elevation: 10,
-    marginBottom: 40,
+    paddingBottom: 75,
   },
 
   row: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 8,
   },
 
   title: {
-    fontSize: 18,
+    fontSize: scale(16),
     fontWeight: "bold",
-    color: "#ff3b3b",
+    color: "#EF4444",
   },
 
   info: {
-    fontSize: 14,
-    marginBottom: 5,
+    fontSize: scale(13),
+    marginBottom: 4,
+    color: "#333",
   },
 
   buttonRow: {
     flexDirection: "row",
-    marginTop: 15,
+    marginTop: 12,
     justifyContent: "space-between",
   },
 
-  callButton: {
+  callBtn: {
     flexDirection: "row",
-    backgroundColor: "#ff3b3b",
+    backgroundColor: "#EF4444",
     padding: 12,
     borderRadius: 10,
     width: "48%",
     justifyContent: "center",
   },
 
-  trackButton: {
+  trackBtn: {
     flexDirection: "row",
-    backgroundColor: "#007bff",
+    backgroundColor: "#2563EB",
     padding: 12,
     borderRadius: 10,
     width: "48%",
     justifyContent: "center",
   },
 
-  callText: {
+  btnText: {
     color: "#fff",
-    marginLeft: 8,
+    marginLeft: 6,
     fontWeight: "bold",
   },
 });

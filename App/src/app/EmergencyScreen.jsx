@@ -8,11 +8,15 @@ import {
   ScrollView,
   Dimensions,
   StatusBar,
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
+
+// Responsive helpers
+const scale = (size) => (width / 375) * size;
 
 const EmergencyScreen = () => {
   const navigation = useNavigation();
@@ -21,7 +25,10 @@ const EmergencyScreen = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
 
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 30 }}
+      >
         {/* Header */}
         <View style={styles.headerContainer}>
           <Text style={styles.header}>🚨 Emergency Center</Text>
@@ -31,93 +38,94 @@ const EmergencyScreen = () => {
         {/* SOS Button */}
         <View style={styles.sosContainer}>
           <TouchableOpacity
-            style={styles.sosButton}
-            activeOpacity={0.8}
+            activeOpacity={0.85}
             onPress={() => navigation.navigate("SOSScreen")}
+            style={styles.sosWrapper}
           >
-            <Ionicons name="warning" size={40} color="#fff" />
-            <Text style={styles.sosText}>SOS</Text>
+            <View style={styles.sosButton}>
+              <Ionicons name="warning" size={scale(40)} color="#fff" />
+              <Text style={styles.sosText}>SOS</Text>
+            </View>
           </TouchableOpacity>
 
           <Text style={styles.sosDesc}>
             Tap to send emergency alert to hospitals, ambulances and contacts
           </Text>
         </View>
-        {/* Ambulance Actions */}
-        <TouchableOpacity
-          style={styles.card}
-          activeOpacity={0.8}
-          onPress={() => navigation.navigate("InstantAmbulance")}
-        >
-          <View style={styles.iconBox}>
-            <Ionicons name="medkit" size={26} color="#fff" />
-          </View>
 
-          <View style={styles.cardText}>
-            <Text style={styles.cardTitle}>Instant Ambulance</Text>
-            <Text style={styles.cardDesc}>
-              Request nearby ambulance instantly in emergency
-            </Text>
-          </View>
-
-          <Ionicons name="chevron-forward" size={22} color="#FCA5A5" />
-        </TouchableOpacity>
-
-        {/* Emergency Actions */}
+        {/* Other Cards */}
         <View style={styles.cardContainer}>
+          {/* Instant Ambulance */}
+          <TouchableOpacity
+            style={styles.card}
+            activeOpacity={0.85}
+            onPress={() => navigation.navigate("InstantAmbulance")}
+          >
+            <View style={styles.iconBox}>
+              <Ionicons name="medkit" size={scale(24)} color="#fff" />
+            </View>
+
+            <View style={styles.cardText}>
+              <Text style={styles.cardTitle}>Instant Ambulance</Text>
+              <Text style={styles.cardDesc}>
+                Request nearby ambulance instantly
+              </Text>
+            </View>
+
+            <Ionicons name="chevron-forward" size={22} color="#FCA5A5" />
+          </TouchableOpacity>
           {/* Accident Alert */}
           <TouchableOpacity
             style={styles.card}
-            activeOpacity={0.8}
+            activeOpacity={0.85}
             onPress={() => navigation.navigate("AccidentAlertDetection")}
           >
             <View style={styles.iconBox}>
-              <Ionicons name="car-sport" size={26} color="#fff" />
+              <Ionicons name="car-sport" size={scale(24)} color="#fff" />
             </View>
 
             <View style={styles.cardText}>
               <Text style={styles.cardTitle}>Accident Alert</Text>
-              <Text style={styles.cardDesc}>
-                Automatic accident detection using sensors
-              </Text>
+              <Text style={styles.cardDesc}>Automatic accident detection</Text>
             </View>
 
             <Ionicons name="chevron-forward" size={22} color="#FCA5A5" />
           </TouchableOpacity>
 
-          {/* near  */}
+          {/* Nearby Hospital */}
           <TouchableOpacity
             style={styles.card}
-            activeOpacity={0.8}
+            activeOpacity={0.85}
             onPress={() => navigation.navigate("NearbyHospitalScreen")}
           >
             <View style={styles.iconBox}>
-              <Ionicons name="business" size={26} color="#fff" />
+              <Ionicons name="business" size={scale(24)} color="#fff" />
             </View>
 
             <View style={styles.cardText}>
-              <Text style={styles.cardTitle}>Near Hospital</Text>
+              <Text style={styles.cardTitle}>Nearby Hospital</Text>
               <Text style={styles.cardDesc}>
-                Find nearby hospitals and medical centers instantly
+                Find hospitals & medical centers
               </Text>
             </View>
 
             <Ionicons name="chevron-forward" size={22} color="#FCA5A5" />
           </TouchableOpacity>
+
           {/* Emergency Contacts */}
           <TouchableOpacity
             style={styles.card}
-            activeOpacity={0.8}
+            activeOpacity={0.85}
             onPress={() => navigation.navigate("EmergencyContactsScreen")}
           >
             <View style={styles.iconBox}>
-              <Ionicons name="people" size={26} color="#fff" />
+              <Ionicons name="people" size={scale(24)} color="#fff" />
             </View>
 
             <View style={styles.cardText}>
               <Text style={styles.cardTitle}>Emergency Contacts</Text>
               <Text style={styles.cardDesc}>
-                Notify family and friends instantly
+                Notify family & friends instantly
               </Text>
             </View>
 
@@ -139,45 +147,53 @@ const styles = StyleSheet.create({
 
   headerContainer: {
     alignItems: "center",
-    marginTop: 40,
+    marginTop: Platform.OS === "android" ? 20 : 10,
+    paddingHorizontal: 20,
   },
 
   header: {
     color: "#fff",
-    fontSize: 28,
+    fontSize: scale(26),
     fontWeight: "bold",
+    textAlign: "center",
   },
 
   subHeader: {
     color: "#FCA5A5",
     marginTop: 6,
-    fontSize: 14,
+    fontSize: scale(13),
+    textAlign: "center",
   },
 
   sosContainer: {
     alignItems: "center",
-    marginTop: 40,
-    marginBottom: 30,
+    marginTop: 30,
+    marginBottom: 25,
+  },
+
+  sosWrapper: {
+    borderRadius: 999,
+    padding: 8,
+    backgroundColor: "rgba(239,68,68,0.15)",
   },
 
   sosButton: {
-    width: width * 0.48,
-    height: width * 0.48,
-    borderRadius: width * 0.24,
+    width: width * 0.45,
+    height: width * 0.45,
+    borderRadius: width * 0.225,
     backgroundColor: "#EF4444",
     justifyContent: "center",
     alignItems: "center",
 
     shadowColor: "#FF4D6D",
-    shadowOpacity: 0.8,
-    shadowRadius: 25,
-    shadowOffset: { width: 0, height: 10 },
-
-    elevation: 15,
+    shadowOpacity: 0.9,
+    shadowRadius: 30,
+    shadowOffset: { width: 0, height: 12 },
+    elevation: 20,
   },
 
   sosText: {
-    fontSize: 38,
+    fontSize: scale(34),
     color: "#fff",
     fontWeight: "bold",
     marginTop: 5,
@@ -187,36 +203,34 @@ const styles = StyleSheet.create({
     color: "#FCA5A5",
     marginTop: 15,
     textAlign: "center",
-    paddingHorizontal: 25,
-    fontSize: 14,
+    paddingHorizontal: 30,
+    fontSize: scale(13),
     lineHeight: 20,
   },
 
   cardContainer: {
     paddingHorizontal: 16,
-    marginTop: 10,
+    paddingBottom: 30,
   },
 
   card: {
     backgroundColor: "#7F1D1D",
     borderRadius: 18,
-    padding: 18,
-    marginBottom: 16,
+    padding: 16,
+    marginBottom: 14,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
 
     shadowColor: "#EF4444",
-    shadowOpacity: 0.5,
-    shadowRadius: 12,
+    shadowOpacity: 0.4,
+    shadowRadius: 10,
     shadowOffset: { width: 0, height: 5 },
-
-    elevation: 8,
+    elevation: 6,
   },
 
   iconBox: {
-    width: 50,
-    height: 50,
+    width: 48,
+    height: 48,
     borderRadius: 12,
     backgroundColor: "#EF4444",
     justifyContent: "center",
@@ -225,18 +239,18 @@ const styles = StyleSheet.create({
 
   cardText: {
     flex: 1,
-    marginLeft: 15,
+    marginLeft: 12,
   },
 
   cardTitle: {
     color: "#fff",
-    fontSize: 18,
+    fontSize: scale(16),
     fontWeight: "bold",
   },
 
   cardDesc: {
     color: "#FCA5A5",
-    marginTop: 4,
-    fontSize: 13,
+    marginTop: 3,
+    fontSize: scale(12),
   },
 });
