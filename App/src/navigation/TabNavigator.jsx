@@ -5,8 +5,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import HomeScreen from "../app/home";
 import EmergencyScreen from "../app/EmergencyScreen";
-import MapScreen from "../app/MapScreen";
 import ProfileScreen from "../app/profile";
+import AvailableServiceScreen from "../app/AvalibleService";
 
 const Tab = createBottomTabNavigator();
 
@@ -60,8 +60,8 @@ export default function TabNavigator() {
               : "alert-circle-outline";
           }
 
-          if (route.name === "Map") {
-            iconName = focused ? "map" : "map-outline";
+          if (route.name === "Services") {
+            iconName = focused ? "medkit" : "medkit-outline";
           }
 
           if (route.name === "Profile") {
@@ -87,7 +87,7 @@ export default function TabNavigator() {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Emergency" component={EmergencyScreen} />
-      <Tab.Screen name="Map" component={MapScreen} />
+      <Tab.Screen name="Services" component={AvailableServiceScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );

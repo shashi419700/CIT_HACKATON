@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
     fontSize: scale(26),
     fontWeight: "bold",
     textAlign: "center",
+    paddingTop: 25,
   },
 
   subHeader: {

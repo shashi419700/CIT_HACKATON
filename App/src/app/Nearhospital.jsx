@@ -13,6 +13,7 @@ import {
   Linking,
 } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const dummyHospitals = [
   {
@@ -67,6 +68,8 @@ const NearbyHospitalScreen = () => {
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
+``
+  const navigation = useNavigation();
 
   const openAppointment = (hospital) => {
     setSelectedHospital(hospital);
@@ -96,38 +99,46 @@ const NearbyHospitalScreen = () => {
   };
 
   const renderItem = ({ item }) => (
-    <View style={styles.card}>
-      <Image source={{ uri: item.image }} style={styles.image} />
+  <TouchableOpacity
+    style={styles.card}
+    activeOpacity={0.8}
+    onPress={() =>
+      navigation.navigate("AvailableService", {
+        hospital: item,
+      })
+    }
+  >
+    <Image source={{ uri: item.image }} style={styles.image} />
 
-      <View style={styles.cardContent}>
-        <View style={styles.topRow}>
-          <Text style={styles.name}>{item.name}</Text>
-          <Text style={styles.distance}>{item.distance}</Text>
-        </View>
+    <View style={styles.cardContent}>
+      <View style={styles.topRow}>
+        <Text style={styles.name}>{item.name}</Text>
+        <Text style={styles.distance}>{item.distance}</Text>
+      </View>
 
-        <Text style={styles.address}>{item.address}</Text>
-        <Text style={styles.special}>{item.specialization}</Text>
+      <Text style={styles.address}>{item.address}</Text>
+      <Text style={styles.special}>{item.specialization}</Text>
 
-        <View style={styles.buttonRow}>
-          <TouchableOpacity
-            style={styles.callBtn}
-            onPress={() => handleCall(item)}
-          >
-            <Ionicons name="call" size={18} color="#fff" />
-            <Text style={styles.btnText}>Call</Text>
-          </TouchableOpacity>
+      <View style={styles.buttonRow}>
+        <TouchableOpacity
+          style={styles.callBtn}
+          onPress={() => handleCall(item)}
+        >
+          <Ionicons name="call" size={18} color="#fff" />
+          <Text style={styles.btnText}>Call</Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.bookBtn}
-            onPress={() => openAppointment(item)}
-          >
-            <MaterialIcons name="event-available" size={18} color="#fff" />
-            <Text style={styles.btnText}>Book Appointment</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          style={styles.bookBtn}
+          onPress={() => openAppointment(item)}
+        >
+          <MaterialIcons name="event-available" size={18} color="#fff" />
+          <Text style={styles.btnText}>Book Appointment</Text>
+        </TouchableOpacity>
       </View>
     </View>
-  );
+  </TouchableOpacity>
+);
 
   return (
     <SafeAreaView style={styles.container}>
