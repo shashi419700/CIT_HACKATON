@@ -145,6 +145,8 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     marginBottom: 5,
+    paddingTop: 30,
+
   },
 
   subHeader: {

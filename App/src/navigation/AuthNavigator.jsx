@@ -16,6 +16,7 @@ import NormalBedScreen from "../app/NormalBedScreen";
 import OxygenBedScreen from "../app/OxygenBedScreen";
 import ICUBedScreen from "../app/ICUBedScreen";
 import BloodScreen from "../app/BloodScreen";
+import EmergencyContactScreen from "../app/AddNumber";
 const Stack = createStackNavigator();
 
 export default function AuthNavigator() {
@@ -47,6 +48,9 @@ export default function AuthNavigator() {
         name="NearbyHospitalScreen"
         component={NearbyHospitalScreen}
       />
+
+      <Stack.Screen name="EmergencyContactScreen" component={EmergencyContactScreen} />
+
       <Stack.Screen name="AvailableService" component={AvailableService} />
 
       <Stack.Screen name="AIChat" component={AIChatScreen} />

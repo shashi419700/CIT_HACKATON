@@ -55,6 +55,26 @@ const EmergencyScreen = () => {
 
         {/* Other Cards */}
         <View style={styles.cardContainer}>
+          {/* Add Number  */}
+          <TouchableOpacity
+            style={styles.card}
+            activeOpacity={0.85}
+            onPress={() => navigation.navigate("EmergencyContactScreen")}
+          >
+            <View style={styles.iconBox}>
+              <Ionicons name="call" size={scale(24)} color="#fff" />
+            </View>
+
+            <View style={styles.cardText}>
+              <Text style={styles.cardTitle}>Add Emergency Contact</Text>
+              <Text style={styles.cardDesc}>
+                Add & manage emergency contact numbers
+              </Text>
+            </View>
+
+            <Ionicons name="chevron-forward" size={22} color="#FCA5A5" />
+          </TouchableOpacity>
+
           {/* Instant Ambulance */}
           <TouchableOpacity
             style={styles.card}
