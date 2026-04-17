@@ -138,3 +138,13 @@ SMS → WhatsApp → Email → Hospital Alert
 ❤️ Life-saving solution
 
 
+## 📱 Screenshots
+
+<p align="center">
+  <img src="Login.jpeg" width="250"/>
+  <img src="Home.jpeg" width="250"/>
+  <img src="Map.jpeg" width="250"/>
+  <img src="SOS.jpeg" width="250"/>
+  <img src="Services.jpeg" width="250"/>
+  <img src="Profile.jpeg" width="250"/>
+</p>
