@@ -1,6 +1,6 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://arka-jain-hacks.onrender.com/api",
+  baseURL: "https://cit-hackaton-1.onrender.com/api",
 });
 export default API;
